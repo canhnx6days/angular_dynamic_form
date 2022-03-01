@@ -1,0 +1,54 @@
+<div class="field" [formGroup]="formGroup" *ngIf="!settingControl.hidden">
+  <div class="field-label" [attr.for]="settingControl.key" *ngIf="settingControl.controlType !== 'checkbox'">
+    {{ settingControl.label | translate}}
+    <span *ngIf="settingControl.validates.required" class="color-red">*</span>
+  </div>
+
+  <div class="field-value" [ngSwitch]="settingControl.controlType">
+    <div class="field-value" *ngSwitchCase="'textbox'">
+      <input type="text" [ngClass]="{'p-disabled': settingControl.disabled}" [formControlName]="settingControl.key"
+        [id]="settingControl.key" [type]="settingControl.type" placeholder="{{ settingControl.label | translate}}"
+        (input)="(settingControl.validates.isDuplicate = false)">
+    </div>
+
+    <div class="field-value" *ngSwitchCase="'password'">
+      <p-password [toggleMask]="true" [feedback]="false" [ngClass]="{'p-disabled': settingControl.disabled}"
+        [formControlName]="settingControl.key" [id]="settingControl.key"
+        placeholder="{{ settingControl.label | translate}}"
+        (input)="dynamicFormControlService.validatePasswordMatch(formGroup,settingControls)">
+      </p-password>
+    </div>
+
+    <div class="field-value" *ngSwitchCase="'dropdown'">
+      <p-dropdown [options]="settingControl.options" [formControlName]="settingControl.key" [filter]="true"
+        placeholder="{{'select_' + settingControl.key | translate}}" optionLabel="{{settingControl.optionLabel}}"
+        optionValue="{{settingControl.optionValue}}" [showClear]="true" (onChange)="settingControl.onChange($event)">
+      </p-dropdown>
+    </div>
+
+    <div class="checkbox-group field-value" *ngSwitchCase="'checkbox-group'">
+      <div *ngFor="let option of settingControl.options" class="col-md-2">
+        <p-checkbox name="settingControl.key" value="{{option}}" label="{{option}}"
+          [formControl]="$any(formGroup.controls[settingControl.key])">
+        </p-checkbox>
+      </div>
+    </div>
+
+    <div class="" *ngSwitchCase="'checkbox'">
+      <p-checkbox label="{{settingControl.label | translate}}" [formControlName]="settingControl.key" [binary]="true">
+      </p-checkbox>
+    </div>
+  </div>
+
+  <div *ngIf="{messageArr: dynamicFormControlService.validateMessage(
+      formGroup,
+      settingControl, 
+      isSubmit
+      )} as vars">
+    <div *ngIf="vars.messageArr.length" [id]="settingControl.key + '_validate_message'">
+      <div *ngFor="let message of vars.messageArr" class="error-validate">
+        {{ message | translate }}
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+<p-dialog header="{{titleDialogCreateOrUpdateItem | translate}}" [(visible)]="visibleCreateOrUpdateItem"
+  [appendTo]="'body'" [modal]="true" [style]="{width: '926px'}">
+  <form [formGroup]="formGroup" autocomplete="off">
+    <div *ngFor="let settingControl of settingControls">
+      <dynamic-form-element [formGroup]="formGroup" [settingControl]="settingControl"
+        [settingControls]="settingControls" [isSubmit]="isSubmit">
+      </dynamic-form-element>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <button class="btn btn-common min-width-100" (click)="hideCreateOrUpdateItem()">{{'cancel' | translate}}</button>
+    <button class="btn btn-vnlp min-width-100" (click)="onSubmitCreateOrEditItem()">{{'save' | translate}}</button>
+  </ng-template>
+</p-dialog>
